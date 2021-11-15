@@ -32,6 +32,7 @@ class YoutubePlayerValue {
     this.webViewController,
     this.isDragging = false,
     this.metaData = const YoutubeMetaData(),
+    this.isAudioMute = false,
   });
 
   /// Returns true when the player is ready to play videos.
@@ -84,43 +85,46 @@ class YoutubePlayerValue {
   /// Returns meta data of the currently loaded/cued video.
   final YoutubeMetaData metaData;
 
+  /// The current volume setting for the player.
+  final bool isAudioMute;
+
   /// Creates new [YoutubePlayerValue] with assigned parameters and overrides
   /// the old one.
-  YoutubePlayerValue copyWith({
-    bool? isReady,
-    bool? isControlsVisible,
-    bool? isLoaded,
-    bool? hasPlayed,
-    Duration? position,
-    double? buffered,
-    bool? isPlaying,
-    bool? isFullScreen,
-    int? volume,
-    PlayerState? playerState,
-    double? playbackRate,
-    String? playbackQuality,
-    int? errorCode,
-    InAppWebViewController? webViewController,
-    bool? isDragging,
-    YoutubeMetaData? metaData,
-  }) {
+  YoutubePlayerValue copyWith(
+      {bool? isReady,
+      bool? isControlsVisible,
+      bool? isLoaded,
+      bool? hasPlayed,
+      Duration? position,
+      double? buffered,
+      bool? isPlaying,
+      bool? isFullScreen,
+      int? volume,
+      PlayerState? playerState,
+      double? playbackRate,
+      String? playbackQuality,
+      int? errorCode,
+      InAppWebViewController? webViewController,
+      bool? isDragging,
+      YoutubeMetaData? metaData,
+      bool? isAudioMute}) {
     return YoutubePlayerValue(
-      isReady: isReady ?? this.isReady,
-      isControlsVisible: isControlsVisible ?? this.isControlsVisible,
-      hasPlayed: hasPlayed ?? this.hasPlayed,
-      position: position ?? this.position,
-      buffered: buffered ?? this.buffered,
-      isPlaying: isPlaying ?? this.isPlaying,
-      isFullScreen: isFullScreen ?? this.isFullScreen,
-      volume: volume ?? this.volume,
-      playerState: playerState ?? this.playerState,
-      playbackRate: playbackRate ?? this.playbackRate,
-      playbackQuality: playbackQuality ?? this.playbackQuality,
-      errorCode: errorCode ?? this.errorCode,
-      webViewController: webViewController ?? this.webViewController,
-      isDragging: isDragging ?? this.isDragging,
-      metaData: metaData ?? this.metaData,
-    );
+        isReady: isReady ?? this.isReady,
+        isControlsVisible: isControlsVisible ?? this.isControlsVisible,
+        hasPlayed: hasPlayed ?? this.hasPlayed,
+        position: position ?? this.position,
+        buffered: buffered ?? this.buffered,
+        isPlaying: isPlaying ?? this.isPlaying,
+        isFullScreen: isFullScreen ?? this.isFullScreen,
+        volume: volume ?? this.volume,
+        playerState: playerState ?? this.playerState,
+        playbackRate: playbackRate ?? this.playbackRate,
+        playbackQuality: playbackQuality ?? this.playbackQuality,
+        errorCode: errorCode ?? this.errorCode,
+        webViewController: webViewController ?? this.webViewController,
+        isDragging: isDragging ?? this.isDragging,
+        metaData: metaData ?? this.metaData,
+        isAudioMute: isAudioMute ?? this.isAudioMute);
   }
 
   @override
@@ -229,10 +233,16 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   }
 
   /// Mutes the player.
-  void mute() => _callMethod('mute()');
+  void mute() {
+    _callMethod('mute()');
+    updateValue(value.copyWith(isAudioMute: true));
+  }
 
   /// Un mutes the player.
-  void unMute() => _callMethod('unMute()');
+  void unMute() {
+    _callMethod('unMute()');
+    updateValue(value.copyWith(isAudioMute: false));
+  }
 
   /// Sets the volume of player.
   /// Max = 100 , Min = 0

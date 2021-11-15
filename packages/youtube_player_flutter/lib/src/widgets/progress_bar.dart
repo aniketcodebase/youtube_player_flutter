@@ -6,6 +6,43 @@ import 'package:flutter/material.dart';
 
 import '../utils/youtube_player_controller.dart';
 
+/// Defines different colors for [ProgressBar].
+class ProgressBarColors {
+  /// Defines background color of the [ProgressBar].
+  final Color? backgroundColor;
+
+  /// Defines color for played portion of the [ProgressBar].
+  final Color? playedColor;
+
+  /// Defines color for buffered portion of the [ProgressBar].
+  final Color? bufferedColor;
+
+  /// Defines color for handle of the [ProgressBar].
+  final Color? handleColor;
+
+  /// Creates [ProgressBarColors].
+  const ProgressBarColors({
+    this.backgroundColor,
+    this.playedColor,
+    this.bufferedColor,
+    this.handleColor,
+  });
+
+  ///
+  ProgressBarColors copyWith({
+    Color? backgroundColor,
+    Color? playedColor,
+    Color? bufferedColor,
+    Color? handleColor,
+  }) =>
+      ProgressBarColors(
+        backgroundColor: backgroundColor ?? this.backgroundColor,
+        handleColor: handleColor ?? this.handleColor,
+        bufferedColor: bufferedColor ?? this.bufferedColor,
+        playedColor: playedColor ?? this.playedColor,
+      );
+}
+
 /// A widget to display video progress bar.
 class ProgressBar extends StatefulWidget {
   /// Overrides the default [YoutubePlayerController].

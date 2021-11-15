@@ -6,47 +6,13 @@ import 'package:flutter/material.dart';
 
 import '../utils/youtube_player_controller.dart';
 
-/// Defines different colors for [ProgressBar].
-class ProgressBarColors {
-  /// Defines background color of the [ProgressBar].
-  final Color? backgroundColor;
-
-  /// Defines color for played portion of the [ProgressBar].
-  final Color? playedColor;
-
-  /// Defines color for buffered portion of the [ProgressBar].
-  final Color? bufferedColor;
-
-  /// Defines color for handle of the [ProgressBar].
-  final Color? handleColor;
-
-  /// Creates [ProgressBarColors].
-  const ProgressBarColors({
-    this.backgroundColor,
-    this.playedColor,
-    this.bufferedColor,
-    this.handleColor,
-  });
-
-  ///
-  ProgressBarColors copyWith({
-    Color? backgroundColor,
-    Color? playedColor,
-    Color? bufferedColor,
-    Color? handleColor,
-  }) =>
-      ProgressBarColors(
-        backgroundColor: backgroundColor ?? this.backgroundColor,
-        handleColor: handleColor ?? this.handleColor,
-        bufferedColor: bufferedColor ?? this.bufferedColor,
-        playedColor: playedColor ?? this.playedColor,
-      );
-}
-
 /// A widget to display video progress bar.
 class ProgressBar extends StatefulWidget {
   /// Overrides the default [YoutubePlayerController].
   final YoutubePlayerController? controller;
+  final Duration? duration;
+  final Duration? startsAt;
+  final Duration? endsAt;
 
   /// Defines colors for the progress bar.
   final ProgressBarColors? colors;
@@ -57,11 +23,13 @@ class ProgressBar extends StatefulWidget {
   final bool isExpanded;
 
   /// Creates [ProgressBar] widget.
-  ProgressBar({
-    this.controller,
-    this.colors,
-    this.isExpanded = false,
-  });
+  ProgressBar(
+      {this.controller,
+      this.colors,
+      this.isExpanded = false,
+      this.duration,
+      this.startsAt,
+      this.endsAt});
 
   @override
   _ProgressBarState createState() {
@@ -105,11 +73,14 @@ class _ProgressBarState extends State<ProgressBar> {
   }
 
   void positionListener() {
-    var _totalDuration = _controller.metadata.duration.inMilliseconds;
+    var _totalDuration = widget.duration?.inMilliseconds ??
+        _controller.metadata.duration.inMilliseconds;
     if (mounted && !_totalDuration.isNaN && _totalDuration != 0) {
       setState(() {
-        _playedValue =
-            _controller.value.position.inMilliseconds / _totalDuration;
+        _playedValue = ((_controller.value.position.inMilliseconds -
+                (widget.startsAt?.inMilliseconds ?? 0)) /
+            _totalDuration);
+        if (_playedValue < 0) _playedValue = 0;
         _bufferedValue = _controller.value.buffered;
       });
     }

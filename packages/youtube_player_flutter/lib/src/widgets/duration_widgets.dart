@@ -1,19 +1,14 @@
-// Copyright 2020 Sarbagya Dhaubanjar. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
-
-import '../utils/duration_formatter.dart';
-import '../utils/youtube_player_controller.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 /// A widget which displays the current position of the video.
 class CurrentPosition extends StatefulWidget {
   /// Overrides the default [YoutubePlayerController].
   final YoutubePlayerController? controller;
+  final Duration? startsAt;
 
   /// Creates [CurrentPosition] widget.
-  CurrentPosition({this.controller});
+  CurrentPosition({this.controller, this.startsAt});
 
   @override
   _CurrentPositionState createState() => _CurrentPositionState();
@@ -52,9 +47,16 @@ class _CurrentPositionState extends State<CurrentPosition> {
 
   @override
   Widget build(BuildContext context) {
+    int milliseconds = _controller.value.position.inMilliseconds;
+    if (widget.startsAt != null) {
+      milliseconds = milliseconds - widget.startsAt!.inMilliseconds;
+      if (milliseconds < 0) {
+        milliseconds = 0;
+      }
+    }
     return Text(
       durationFormatter(
-        _controller.value.position.inMilliseconds,
+        milliseconds,
       ),
       style: const TextStyle(
         color: Colors.white,
@@ -68,9 +70,10 @@ class _CurrentPositionState extends State<CurrentPosition> {
 class RemainingDuration extends StatefulWidget {
   /// Overrides the default [YoutubePlayerController].
   final YoutubePlayerController? controller;
+  final Duration? customEndsAt;
 
   /// Creates [RemainingDuration] widget.
-  RemainingDuration({this.controller});
+  RemainingDuration({this.controller, this.customEndsAt});
 
   @override
   _RemainingDurationState createState() => _RemainingDurationState();
@@ -109,11 +112,12 @@ class _RemainingDurationState extends State<RemainingDuration> {
 
   @override
   Widget build(BuildContext context) {
+    int milliseconds = (widget.customEndsAt != null
+            ? widget.customEndsAt!.inMilliseconds
+            : _controller.metadata.duration.inMilliseconds) -
+        _controller.value.position.inMilliseconds;
     return Text(
-      "- ${durationFormatter(
-        (_controller.metadata.duration.inMilliseconds) -
-            (_controller.value.position.inMilliseconds),
-      )}",
+      "- ${durationFormatter(milliseconds)}",
       style: const TextStyle(
         color: Colors.white,
         fontSize: 12.0,

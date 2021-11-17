@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../enums/player_state.dart';
 import '../enums/thumbnail_quality.dart';
 import '../utils/errors.dart';
 import '../utils/youtube_meta_data.dart';
@@ -132,6 +133,13 @@ class YoutubePlayer extends StatefulWidget {
   /// {@endtemplate}
   final bool showVideoProgressIndicator;
 
+  /// {@template youtube_player_flutter.endThumbnail}
+  /// Thumbnail to show when player has ended playing the video.
+  ///
+  /// If not set, the thumbnail is shown, if thumbnail is not set the thumbnail of the video is shown.
+  /// {@endtemplate}
+  final Widget? endThumbnail;
+
   /// Creates [YoutubePlayer] widget.
   const YoutubePlayer({
     this.key,
@@ -150,6 +158,7 @@ class YoutubePlayer extends StatefulWidget {
     this.actionsPadding = const EdgeInsets.all(8.0),
     this.thumbnail,
     this.showVideoProgressIndicator = false,
+    this.endThumbnail,
   })  : progressColors = progressColors ?? const ProgressBarColors(),
         progressIndicatorColor = progressIndicatorColor ?? Colors.red;
 
@@ -316,9 +325,14 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
           ),
           if (!controller.flags.hideThumbnail)
             AnimatedOpacity(
-              opacity: controller.value.isPlaying ? 0 : 1,
+              opacity: controller.value.playerState == PlayerState.ended
+                  ? 1
+                  : (controller.value.isPlaying ? 0 : 1),
               duration: const Duration(milliseconds: 300),
-              child: widget.thumbnail ?? _thumbnail,
+              child: controller.value.playerState == PlayerState.ended &&
+                      widget.endThumbnail != null
+                  ? widget.endThumbnail
+                  : widget.thumbnail ?? _thumbnail,
             ),
           if (!controller.value.isFullScreen &&
               !controller.flags.hideControls &&

@@ -71,9 +71,10 @@ class RemainingDuration extends StatefulWidget {
   /// Overrides the default [YoutubePlayerController].
   final YoutubePlayerController? controller;
   final Duration? customEndsAt;
+  final Duration? customDuration;
 
   /// Creates [RemainingDuration] widget.
-  RemainingDuration({this.controller, this.customEndsAt});
+  RemainingDuration({this.controller, this.customEndsAt, this.customDuration});
 
   @override
   _RemainingDurationState createState() => _RemainingDurationState();
@@ -112,10 +113,17 @@ class _RemainingDurationState extends State<RemainingDuration> {
 
   @override
   Widget build(BuildContext context) {
-    int milliseconds = (widget.customEndsAt != null
-            ? widget.customEndsAt!.inMilliseconds
-            : _controller.metadata.duration.inMilliseconds) -
-        _controller.value.position.inMilliseconds;
+    int milliseconds = 0;
+    if (_controller.metadata.duration.inMilliseconds == 0 &&
+        widget.customEndsAt != null) {
+      milliseconds = widget.customDuration?.inMilliseconds ?? 0;
+    } else {
+      milliseconds = (widget.customEndsAt != null
+              ? widget.customEndsAt!.inMilliseconds
+              : _controller.metadata.duration.inMilliseconds) -
+          _controller.value.position.inMilliseconds;
+    }
+
     return Text(
       "- ${durationFormatter(milliseconds)}",
       style: const TextStyle(

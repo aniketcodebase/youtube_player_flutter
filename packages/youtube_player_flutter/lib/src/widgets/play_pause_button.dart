@@ -75,6 +75,23 @@ class _PlayPauseButtonState extends State<PlayPauseButton>
     if ((!_controller.flags.autoPlay && _controller.value.isReady) ||
         _playerState == PlayerState.playing ||
         _playerState == PlayerState.paused) {
+      print('_playerState: $_playerState');
+      if (_playerState == PlayerState.ended) {
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(50.0),
+            onTap: () {
+              _controller.seekTo(Duration(seconds: _controller.flags.startAt));
+            },
+            child: Icon(
+              Icons.replay,
+              color: Colors.white,
+              size: 60.0,
+            ),
+          ),
+        );
+      }
       return Visibility(
         visible: _playerState == PlayerState.cued ||
             !_controller.value.isPlaying ||

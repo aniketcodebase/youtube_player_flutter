@@ -75,7 +75,6 @@ class _PlayPauseButtonState extends State<PlayPauseButton>
     if ((!_controller.flags.autoPlay && _controller.value.isReady) ||
         _playerState == PlayerState.playing ||
         _playerState == PlayerState.paused) {
-      print('_playerState: $_playerState');
       if (_playerState == PlayerState.ended) {
         return Material(
           color: Colors.transparent,

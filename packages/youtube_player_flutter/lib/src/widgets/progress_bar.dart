@@ -47,7 +47,7 @@ class ProgressBarColors {
 class ProgressBar extends StatefulWidget {
   /// Overrides the default [YoutubePlayerController].
   final YoutubePlayerController? controller;
-  final Duration? duration;
+  final Duration? customDuration;
   final Duration? startsAt;
   final Duration? endsAt;
 
@@ -64,7 +64,7 @@ class ProgressBar extends StatefulWidget {
       {this.controller,
       this.colors,
       this.isExpanded = false,
-      this.duration,
+      this.customDuration,
       this.startsAt,
       this.endsAt});
 
@@ -110,7 +110,7 @@ class _ProgressBarState extends State<ProgressBar> {
   }
 
   void positionListener() {
-    var _totalDuration = widget.duration?.inMilliseconds ??
+    var _totalDuration = widget.customDuration?.inMilliseconds ??
         _controller.metadata.duration.inMilliseconds;
     if (mounted && !_totalDuration.isNaN && _totalDuration != 0) {
       setState(() {

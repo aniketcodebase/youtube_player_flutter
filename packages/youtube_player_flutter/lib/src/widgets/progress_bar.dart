@@ -141,7 +141,7 @@ class _ProgressBarState extends State<ProgressBar> {
     _touchPoint = box.globalToLocal(globalPosition);
     _checkTouchPoint();
     final relative = _touchPoint.dx / box.size.width;
-    _position = _controller.metadata.duration * relative;
+    _position = (_controller.metadata.duration * relative);
     _controller.seekTo(_position, allowSeekAhead: false);
   }
 
@@ -182,7 +182,7 @@ class _ProgressBarState extends State<ProgressBar> {
         child: CustomPaint(
           painter: _ProgressBarPainter(
             progressWidth: 2.0,
-            handleRadius: 7.0,
+            handleRadius: 10.0,
             playedValue: _playedValue,
             bufferedValue: _bufferedValue,
             colors: widget.colors,

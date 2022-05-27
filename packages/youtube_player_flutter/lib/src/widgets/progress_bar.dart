@@ -85,6 +85,18 @@ class _ProgressBarState extends State<ProgressBar> {
   bool _touchDown = false;
   late Duration _position;
 
+  late Duration _customDuration;
+  late Duration _customStartsAt;
+  late Duration _customEndsAt;
+
+  @override
+  void initState() {
+    super.initState();
+    _customDuration = widget.customDuration ?? Duration.zero;
+    _customStartsAt = widget.startsAt ?? Duration.zero;
+    _customEndsAt = widget.endsAt ?? Duration.zero;
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -110,12 +122,14 @@ class _ProgressBarState extends State<ProgressBar> {
   }
 
   void positionListener() {
-    var _totalDuration = widget.customDuration?.inMilliseconds ??
-        _controller.metadata.duration.inMilliseconds;
+    var _totalDuration = _customDuration > Duration.zero
+        ? _customDuration.inMilliseconds
+        : _controller.metadata.duration.inMilliseconds;
+    print(_totalDuration);
     if (mounted && !_totalDuration.isNaN && _totalDuration != 0) {
       setState(() {
         _playedValue = ((_controller.value.position.inMilliseconds -
-                (widget.startsAt?.inMilliseconds ?? 0)) /
+                _customStartsAt.inMilliseconds) /
             _totalDuration);
         if (_playedValue < 0) _playedValue = 0;
         _bufferedValue = _controller.value.buffered;

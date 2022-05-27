@@ -82,6 +82,15 @@ class RemainingDuration extends StatefulWidget {
 
 class _RemainingDurationState extends State<RemainingDuration> {
   late YoutubePlayerController _controller;
+  late Duration _customDuration;
+  late Duration _customEndsAt;
+
+  @override
+  void initState() {
+    super.initState();
+    _customDuration = widget.customDuration ?? Duration.zero;
+    _customEndsAt = widget.customEndsAt ?? Duration.zero;
+  }
 
   @override
   void didChangeDependencies() {
@@ -115,11 +124,11 @@ class _RemainingDurationState extends State<RemainingDuration> {
   Widget build(BuildContext context) {
     int milliseconds = 0;
     if (_controller.metadata.duration.inMilliseconds == 0 &&
-        widget.customEndsAt != null) {
-      milliseconds = widget.customDuration?.inMilliseconds ?? 0;
+        _customEndsAt != Duration.zero) {
+      milliseconds = _customEndsAt.inMilliseconds;
     } else {
-      milliseconds = (widget.customEndsAt != null
-              ? widget.customEndsAt!.inMilliseconds
+      milliseconds = (_customEndsAt != Duration.zero
+              ? _customEndsAt.inMilliseconds
               : _controller.metadata.duration.inMilliseconds) -
           _controller.value.position.inMilliseconds;
     }

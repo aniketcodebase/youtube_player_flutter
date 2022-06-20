@@ -346,7 +346,7 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
                         opacity:
                             controller.value.playerState == PlayerState.ended
                                 ? 1
-                                : (controller.value.isPlaying ? 0 : 1),
+                                : 0, //: (controller.value.isPlaying ? 0 : 1),
                         duration: const Duration(milliseconds: 300),
                         child:
                             controller.value.playerState == PlayerState.ended &&

@@ -310,8 +310,17 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
     return AspectRatio(
       aspectRatio: _aspectRatio,
       child: controller.flags.loadingExternally
-          ? Container(
-              color: Colors.green[100],
+          ? Stack(
+              children: [
+                Container(
+                  color: Colors.grey[200],
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: widget.closeButton!,
+                ),
+              ],
             )
           : (controller.flags.showExternalError
               ? Container(
@@ -399,22 +408,25 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
                                   padding: widget.bottomActions == null
                                       ? const EdgeInsets.all(0.0)
                                       : widget.actionsPadding,
-                                  child: Row(
-                                    children: widget.bottomActions ??
-                                        [
-                                          const SizedBox(width: 14.0),
-                                          CurrentPosition(),
-                                          const SizedBox(width: 8.0),
-                                          ProgressBar(
-                                            isExpanded: true,
-                                            colors: widget.progressColors,
-                                          ),
-                                          RemainingDuration(),
-                                          const PlaybackSpeedButton(),
-                                          FullScreenButton(),
-                                        ],
-                                  ),
-                                ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black87.withAlpha(100)),
+                                    child: Row(
+                                      children: widget.bottomActions ??
+                                          [
+                                            const SizedBox(width: 14.0),
+                                            CurrentPosition(),
+                                            const SizedBox(width: 8.0),
+                                            ProgressBar(
+                                              isExpanded: true,
+                                              colors: widget.progressColors,
+                                            ),
+                                            RemainingDuration(),
+                                            const PlaybackSpeedButton(),
+                                            FullScreenButton(),
+                                          ],
+                                    ),
+                                  )),
                         ),
                       ),
                       Positioned(
@@ -437,8 +449,17 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
                       ),
                     ],
                     if (!controller.flags.hideControls)
-                      Center(
-                        child: PlayPauseButton(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SkipButton(
+                            forward: false,
+                          ),
+                          PlayPauseButton(),
+                          SkipButton(
+                            forward: true,
+                          )
+                        ],
                       ),
                     if (controller.value.hasError) errorWidget,
                     if (widget.closeButton != null)

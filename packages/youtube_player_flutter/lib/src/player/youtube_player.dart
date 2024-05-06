@@ -130,6 +130,12 @@ class YoutubePlayer extends StatefulWidget {
   /// {@endtemplate}
   final bool showVideoProgressIndicator;
 
+   /// {@template youtube_player_flutter.closeButton}
+  /// On video (top right corner) close button displayed througout the video video.
+  ///
+  /// {@endtemplate}
+  final Widget? closeButton;
+
   /// Creates [YoutubePlayer] widget.
   const YoutubePlayer({
     this.key,
@@ -148,6 +154,7 @@ class YoutubePlayer extends StatefulWidget {
     this.actionsPadding = const EdgeInsets.all(8.0),
     this.thumbnail,
     this.showVideoProgressIndicator = false,
+    this.closeButton
   })  : progressColors = progressColors ?? const ProgressBarColors(),
         progressIndicatorColor = progressIndicatorColor ?? Colors.red;
 
@@ -294,7 +301,22 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
   Widget _buildPlayer({required Widget errorWidget}) {
     return AspectRatio(
       aspectRatio: _aspectRatio,
-      child: Stack(
+      child: controller.flags.loadingExternally
+          ? Stack(
+              children: [
+                Container(
+                  color: Colors.grey[200],
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: widget.closeButton!,
+                ),
+              ],
+            )
+          : controller.flags.showExternalError ? Container(
+                  color: Colors.red[100],
+                ) : Stack(
         fit: StackFit.expand,
         clipBehavior: Clip.none,
         children: [
@@ -404,10 +426,23 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
             ),
           ],
           if (!controller.flags.hideControls)
-            Center(
-              child: PlayPauseButton(),
-            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SkipButton(forward: false),
+                  SizedBox(width: 8),
+                  PlayPauseButton(),
+                  SizedBox(width: 8),
+                  SkipButton(forward: true),
+                ],
+              ),
           if (controller.value.hasError) errorWidget,
+          if (widget.closeButton != null)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: widget.closeButton!,
+                      ),
         ],
       ),
     );

@@ -79,6 +79,21 @@ class YoutubePlayerFlags {
   /// Default is true.
   final bool showLiveFullscreenButton;
 
+   /// Defines weather the video player shows the replay button on end.
+  ///
+  /// Default is false
+  final bool replayableOnEnd;
+
+  /// Defines weather the video player shows an external loader
+  ///
+  /// Default is false
+  final bool loadingExternally;
+
+  /// Defines weather the video player shows an external error
+  ///
+  /// Default is false
+  final bool showExternalError;
+
   /// Creates [YoutubePlayerFlags].
   const YoutubePlayerFlags({
     this.hideControls = false,
@@ -96,6 +111,9 @@ class YoutubePlayerFlags {
     this.endAt,
     this.useHybridComposition = true,
     this.showLiveFullscreenButton = true,
+    this.replayableOnEnd = false,
+    this.loadingExternally = false,
+    this.showExternalError = false
   });
 
   /// Copies new values assigned to the [YoutubePlayerFlags].
@@ -116,6 +134,9 @@ class YoutubePlayerFlags {
     bool? controlsVisibleAtStart,
     bool? useHybridComposition,
     bool? showLiveFullscreenButton,
+    bool? replayable,
+    bool? loadingExternally,
+    bool? externalError
   }) {
     return YoutubePlayerFlags(
       autoPlay: autoPlay ?? this.autoPlay,
@@ -135,6 +156,9 @@ class YoutubePlayerFlags {
       useHybridComposition: useHybridComposition ?? this.useHybridComposition,
       showLiveFullscreenButton:
           showLiveFullscreenButton ?? this.showLiveFullscreenButton,
+      replayableOnEnd: replayable ?? this.replayableOnEnd,
+      loadingExternally: loadingExternally ?? this.loadingExternally,
+      showExternalError: externalError ?? this.showExternalError
     );
   }
 }

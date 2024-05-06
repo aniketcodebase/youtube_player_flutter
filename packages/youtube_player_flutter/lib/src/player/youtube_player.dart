@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../enums/player_state.dart';
 import '../enums/thumbnail_quality.dart';
 import '../utils/errors.dart';
 import '../utils/youtube_meta_data.dart';
@@ -340,7 +341,9 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
           ),
           if (!controller.flags.hideThumbnail)
             AnimatedOpacity(
-              opacity: controller.value.isPlaying ? 0 : 1,
+              opacity: controller.value.playerState == PlayerState.ended
+                                ? 1
+                                : 0, //: (controller.value.isPlaying ? 0 : 1),
               duration: const Duration(milliseconds: 300),
               child: widget.thumbnail ?? _thumbnail,
             ),

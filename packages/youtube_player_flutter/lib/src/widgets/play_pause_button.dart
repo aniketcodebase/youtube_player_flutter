@@ -97,9 +97,8 @@ class _PlayPauseButtonState extends State<PlayPauseButton>
       );
     }
     if (_controller.value.hasError) return const SizedBox();
-    if (_controller.value.isReady && _playerState == PlayerState.ended) {
-      if (_controller.flags.replayableOnEnd)
-        return Material(
+    if (_playerState == PlayerState.ended && _controller.flags.replayableOnEnd == true) 
+      return Material(
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(50.0),
@@ -113,9 +112,6 @@ class _PlayPauseButtonState extends State<PlayPauseButton>
             ),
           ),
         );
-      else
-        return const SizedBox();
-    }
     return widget.bufferIndicator ??
         Container(
           width: 70.0,
